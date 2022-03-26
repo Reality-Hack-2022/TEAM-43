@@ -7,7 +7,7 @@ using Firebase.Extensions;
 
 public class firestoreFetch : MonoBehaviour
 {
-    public Button button;
+    [SerializeField] Button button;
     FirebaseFirestore database;
     ListenerRegistration listener;
     ListenerRegistration onStartListener;
@@ -17,34 +17,37 @@ public class firestoreFetch : MonoBehaviour
     {
         sessionStart=0;
         database = FirebaseFirestore.DefaultInstance;
-        Button btn = button.GetComponent<Button>();
-        btn.onClick.AddListener(StartUserSession);
+        
+       // button.onClick.AddListener(StartUserSession);
         Debug.Log("hello");
          
     }
     
-    void StartUserSession(){
+    public void StartUserSession(){
         //when session is started add data to firestore.
         // the app should listen for this data then start the activity of pushing emotion datapoints to firestore
         // usersession -> user1001 -> session: int
         // if bool is true start the app 
         Debug.Log("Button has been pressed");
-        // onStartListener=
-        // database.Collection("userSession").Document("user1001")
-        // .Listen(snapshot => {
-        //     Dictionary<string, object> sessionActivity = snapshot.ToDictionary();
-        //     foreach (KeyValuePair<string, object> pair in sessionActivity) {
-        //         sessionStart=(int)pair.Value;
-        //         if (sessionStart==1){
-        //             //session has started
-        //             // begin stream of data
-        //             GetData();
-        //             Debug.Log("user session has started");
-        //         }
-        //         Debug.Log(System.String.Format("{0}: {1}", pair.Key, pair.Value));
-        //         // the pair
-        //     }
-        // });
+        onStartListener=
+        database.Collection("userSession").Document("user1001")
+        .Listen(snapshot => {
+            Dictionary<string, object> sessionActivity = snapshot.ToDictionary();
+            foreach (KeyValuePair<string, object> pair in sessionActivity) {
+                sessionStart=int.Parse(pair.Value.ToString());
+                if (sessionStart==1){
+                    //session has started
+                    // begin stream of data
+                    GetData();
+                    Debug.Log("user session has started");
+                }
+                else{
+                    Debug.Log("dmdsjdfhsj");
+                }
+                Debug.Log(System.String.Format("{0}: {1}", pair.Key, pair.Value));
+                // the pair
+            }
+        });
     }
     void StopUserSession(){
         onStartListener.Stop();
