@@ -38,11 +38,13 @@ public class firestoreFetch : MonoBehaviour
                 if (sessionStart==1){
                     //session has started
                     // begin stream of data
+                    //start video here
                     GetData();
                     Debug.Log("user session has started");
                 }
                 else{
-                    Debug.Log("dmdsjdfhsj");
+                    // loading scene here
+
                 }
                 Debug.Log(System.String.Format("{0}: {1}", pair.Key, pair.Value));
                 // the pair
@@ -56,22 +58,19 @@ public class firestoreFetch : MonoBehaviour
     void GetData(){
         // listen to firebase data
         listener = 
-         database.Collection("userInformation").Document("user1001")
-        .Collection("Enjoyment")
+         database.Collection("userInformation").Document("user1003")
         .Listen(snapshot => {
-            Debug.Log("Callback received query snapshot.");
-            foreach (DocumentSnapshot documentSnapshot in snapshot.Documents) {
-                 Debug.Log(System.String.Format("Document data for {0} document:", documentSnapshot.Id));
-                Dictionary<string, object> emotion = documentSnapshot.ToDictionary();
+                Dictionary<string, object> emotion = snapshot.ToDictionary();
                 foreach (KeyValuePair<string, object> pair in emotion)
                 {
                     // time, float value
+                    // value is the value you want at that particular time
                 Debug.Log(System.String.Format("{0}: {1}", pair.Key, pair.Value));
                 }
 
                 // Newline to separate entries
                 Debug.Log("");
-            }
+            
             });
     }
     void OnDestroy(){
